@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center">
-    <h2>Devices</h2><a class="btn btn-primary" href="{{url_for('main.add_devices')}}">Add Devices</a>
+    <h2>Devices</h2><a class="btn btn-warning" href="{{url_for('main.add_devices')}}">Add Devices</a>
 </div>
 <form class="card card-body mt-3">
     <div class="row g-2">
@@ -24,30 +24,30 @@
     </div>
 </form>
 <div class="table-wrap mt-3">
-    <table class="table table-sm table-striped table-bordered bg-white">
-        <thead class="table-dark sticky-top">
+    <table class="table table-sm table-striped table-hover table-bordered bg-white">
+        <thead class="table-info sticky-top">
             <tr>
-                <th>ID</th>
-                <th>Internal</th>
-                <th>Type</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Connection</th>
-                <th>Engraved</th>
-                <th>Distributed</th>
-                <th>Recipient ID</th>
-                <th>Distribution Date</th>
-                <th>Status</th>
-                <th>Place</th>
-                <th>Capacity GB</th>
-                <th>OS</th>
-                <th>Serial</th>
-                <th>IMEI-1</th>
-                <th>IMEI-2</th>
-                <th>Donor</th>
+                <th style="width: max-content;">ID</th>
+                <th style="width: max-content;">Internal</th>
+                <th style="width: max-content;">Type</th>
+                <th style="width: max-content;">Brand</th>
+                <th style="width: max-content;">Model</th>
+                <th style="width: max-content;">Connection</th>
+                <th style="width: max-content;">Engraved</th>
+                <th style="width: max-content;">Distributed</th>
+                <th style="width: max-content;">Recipient ID</th>
+                <th style="width: max-content;">Distribution Date</th>
+                <th style="width: max-content;">Status</th>
+                <th style="width: max-content;">Place</th>
+                <th style="width: max-content;">Capacity GB</th>
+                <th style="width: max-content;">OS</th>
+                <th style="width: max-content;">Serial</th>
+                <th style="width: max-content;">IMEI-1</th>
+                <th style="width: max-content;">IMEI-2</th>
+                <th style="width: max-content;">Donor</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
             {% for d in devices %}
             <tr>
                 <td>{{d.id}}</td>
@@ -60,7 +60,7 @@
                 <td>{{d.is_distributed}}</td>
                 <td>{{d.recipient_national_id or ''}}</td>
                 <td>{{d.distribution_date or ''}}</td>
-                <td>{{d.status}}</td>
+                <td style="width: max-content;">{{d.status}}</td>
                 <td>{{d.place}}</td>
                 <td>{{d.capacity_gb}}</td>
                 <td>{{d.os or ''}}</td>
