@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Post-Distribution</h2>
+<p>Upload the CSV with columns: Internal_Number, Name, Surname, CNS, Nationality, ONA_Number, MNA, Preference, PRF.</p>
+<form method="post" enctype="multipart/form-data" class="card card-body">
+<label>Distribution date</label><input type="date" name="distribution_date" value="{{today}}" required class="form-control mb-3" style="max-width:250px">
+<label>CSV file</label><input type="file" name="csv_file" accept=".csv" required class="form-control mb-3">
+<button class="btn btn-primary">Process Distribution</button>
+</form>
+<div class="alert alert-info mt-3">The database transaction is all-or-nothing: if any internal number is missing or invalid, no rows are committed.</div>
+{% endblock %}

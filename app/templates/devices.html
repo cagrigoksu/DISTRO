@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center">
+    <h2>Devices</h2><a class="btn btn-primary" href="{{url_for('main.add_devices')}}">Add Devices</a>
+</div>
+<form class="card card-body mt-3">
+    <div class="row g-2">
+        <div class="col-md-3"><label>Search</label><input name="q" value="{{q}}" class="form-control"
+                placeholder="Barcode, brand, model, SN, IMEI, recipient"></div>
+        <div class="col-md-2"><label>Distributed</label><select name="distributed" class="form-select">
+                <option value="">All</option>
+                <option value="1" {{'selected' if distributed=='1' }}>Yes</option>
+                <option value="0" {{'selected' if distributed=='0' }}>No</option>
+            </select></div>
+        {% for key,label,items,current in [('device_type','Device
+        Type',filters.device_types,dtype),('status','Status',filters.statuses,status),('brand','Brand',filters.brands,brand)]
+        %}
+        <div class="col-md-2"><label>{{label}}</label><select name="{{key}}" class="form-select">
+                <option value="">All</option>{% for x in items %}<option value="{{x.name}}" {{'selected' if
+                    current==x.name}}>{{x.name}}</option>{% endfor %}
+            </select></div>
+        {% endfor %}
+        <div class="col-md-1 d-flex align-items-end"><button class="btn btn-primary w-100">Filter</button></div>
+    </div>
+</form>
+<div class="table-wrap mt-3">
+    <table class="table table-sm table-striped table-bordered bg-white">
+        <thead class="table-dark sticky-top">
+            <tr>
+                <th>ID</th>
+                <th>Internal</th>
+                <th>Type</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Connection</th>
+                <th>Engraved</th>
+                <th>Distributed</th>
+                <th>Recipient ID</th>
+                <th>Distribution Date</th>
+                <th>Status</th>
+                <th>Place</th>
+                <th>Capacity GB</th>
+                <th>OS</th>
+                <th>Serial</th>
+                <th>IMEI-1</th>
+                <th>IMEI-2</th>
+                <th>Donor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in devices %}
+            <tr>
+                <td>{{d.id}}</td>
+                <td>{{d.internal_barcode}}</td>
+                <td>{{d.device_type}}</td>
+                <td>{{d.brand}}</td>
+                <td>{{d.model}}</td>
+                <td>{{d.connection}}</td>
+                <td>{{d.is_engraved}}</td>
+                <td>{{d.is_distributed}}</td>
+                <td>{{d.recipient_national_id or ''}}</td>
+                <td>{{d.distribution_date or ''}}</td>
+                <td>{{d.status}}</td>
+                <td>{{d.place}}</td>
+                <td>{{d.capacity_gb}}</td>
+                <td>{{d.os or ''}}</td>
+                <td>{{d.serial_number or ''}}</td>
+                <td>{{d.imei_1 or ''}}</td>
+                <td>{{d.imei_2 or ''}}</td>
+                <td>{{d.donor or ''}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="small-muted">{{devices|length}} device(s) shown.</div>
+{% endblock %}

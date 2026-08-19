@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Accessoires Inventory</h2>
+<form method="post" id="accessoryForm">
+<table class="table table-bordered bg-white">
+<thead><tr><th>Accessoire</th><th style="width:220px">Number</th></tr></thead>
+<tbody>
+{% for a in accessories %}
+<tr><td>{{a.name}}</td><td><input type="number" min="0" step="1" class="form-control quantity" name="quantity_{{a.id}}" value="{{a.quantity}}"></td></tr>
+{% endfor %}
+</tbody>
+</table>
+<button id="saveBtn" class="btn btn-primary" disabled>Save</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+const initial=[...document.querySelectorAll('.quantity')].map(x=>x.value);
+document.querySelectorAll('.quantity').forEach((el,i)=>{
+ el.addEventListener('input',()=>document.getElementById('saveBtn').disabled=el.value===initial[i] && [...document.querySelectorAll('.quantity')].every((x,j)=>x.value===initial[j]));
+});
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Post-Distribution Complete</h2>
+<div class="alert alert-success">{{updated|length}} device(s) were updated in the database.</div>
+<p>Do you want to update the SP Distribution file now?</p>
+<button class="btn btn-primary" onclick="updateSP()">Yes</button>
+<a class="btn btn-secondary" href="{{url_for('main.post_distribution')}}">No</a>
+<div id="result" class="mt-3"></div>
+{% endblock %}
+{% block scripts %}
+<script>
+async function updateSP(){
+ const result=document.getElementById('result');
+ result.textContent='Updating...';
+ const response=await fetch('{{url_for("main.update_sp")}}',{
+   method:'POST', headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({distribution_date:{{distribution_date|tojson}},updated:{{updated|tojson}}})
+ });
+ const data=await response.json();
+ result.className=data.ok?'alert alert-success mt-3':'alert alert-danger mt-3';
+ result.textContent=data.message;
+}
+</script>
+{% endblock %}

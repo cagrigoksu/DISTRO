@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Pre-Distribution</h2>
+<p>Upload the CSV and provide the output filename. The configured Excel template is copied first, then the requested sheets are populated.</p>
+<form method="post" enctype="multipart/form-data" class="card card-body">
+<label>CSV file</label><input type="file" name="csv_file" accept=".csv" required class="form-control mb-3">
+<label>Output filename</label><input name="output_name" class="form-control mb-3" placeholder="e.g. Distribution_2026-08-19.xlsx" required>
+<button class="btn btn-primary">Create Pre-Distribution File</button>
+</form>
+<div class="alert alert-secondary mt-3">
+Output files are saved in the <code>Pre-Distribution Files</code> folder and also returned as a browser download.
+</div>
+{% endblock %}

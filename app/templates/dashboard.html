@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<div class="row g-3 mt-2">
+{% for title,value in [("Total Devices",stats.total),("Distributed",stats.distributed),("Available",stats.available),("To Recycle",stats.recycle)] %}
+<div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="small-muted">{{title}}</div><div class="display-6">{{value}}</div></div></div></div>
+{% endfor %}
+</div>
+<div class="card mt-4"><div class="card-body">
+<h5>Quick actions</h5>
+<a class="btn btn-primary me-2" href="{{url_for('main.add_devices')}}">Add devices</a>
+<a class="btn btn-outline-primary me-2" href="{{url_for('main.pre_distribution')}}">Pre-Distribution</a>
+<a class="btn btn-outline-primary" href="{{url_for('main.post_distribution')}}">Post-Distribution</a>
+</div></div>
+{% endblock %}
