@@ -138,8 +138,15 @@ def init_db():
 
     #TODO remove these later
     for value in [
-        "USB-C Cable", "Lightning Cable", "Micro-USB Cable",
-        "Power Adapter", "Earphones", "Protective Case", "SIM Pin"
+        "Charger USB-C + USB-A",
+        "Charger USB-C",
+        "Charger USB-A",
+        "Cable USB-C to USB-C",
+        "Cable USB-C to Lightning",        
+        "Cable USB-A to USB-C",
+        "Cable USB-A to Lightning",
+        "Case iPhone Xr",
+        "Case iPhone SE"
     ]:
         conn.execute("INSERT OR IGNORE INTO accessories(name, quantity) VALUES (?, 0)", (value,))
     conn.commit()

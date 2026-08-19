@@ -2,9 +2,13 @@ __pycache__/
 *.pyc
 .DS_Store
 app/.DS_Store
+
 .env/
+
 config.py
+
 instance/*.db
 uploads/*
 Pre-Distribution Files/*
 Templates/*
+SP_TAB_Device_and_Accessoires_Inventory.xlsx

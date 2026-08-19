@@ -102,79 +102,273 @@ def devices():
 @bp.route("/devices/add", methods=["GET", "POST"])
 def add_devices():
     conn = get_db()
+
     if request.method == "POST":
+
+        # common info - entered once for all 
+        common_IN_prefix = request.form.get(
+            "common_IN_prefix", ""
+        ).strip()
+        
+        common_device_type = request.form.get(
+            "common_device_type", ""
+        ).strip()
+
+        common_brand = request.form.get(
+            "common_brand", ""
+        ).strip()
+
+        common_model = request.form.get(
+            "common_model", ""
+        ).strip()
+
+        common_connection = request.form.get(
+            "common_connection", ""
+        ).strip()
+
+        common_donor_type = request.form.get(
+            "common_donor_type", ""
+        ).strip()
+
+        common_entry_date = request.form.get(
+            "common_entry_date", ""
+        ).strip()
+
+        common_donor = request.form.get(
+            "common_donor", ""
+        ).strip()
+
+        common_place = request.form.get(
+            "place", ""
+        ).strip()
+
         rows_data = []
+
+        # individual device info
         for i in range(1, int(request.form.get("row_count", "1")) + 1):
-            internal = request.form.get(f"internal_barcode_{i}", "").strip()
+
+            internal = request.form.get(
+                f"internal_barcode_{i}", ""
+            ).strip()
+
+            internal = common_IN_prefix + internal
+
             if not internal:
                 continue
-            rows_data.append({
-                "internal": internal,
-                "device_type": request.form.get(f"device_type_{i}", "").strip(),
-                "brand": request.form.get(f"brand_{i}", "").strip(),
-                "model": request.form.get(f"model_{i}", "").strip(),
-                "connection": request.form.get(f"connection_{i}", "").strip(),
-                "is_engraved": int(request.form.get(f"is_engraved_{i}", "0")),
-                "engraving_date": request.form.get(f"engraving_date_{i}", "").strip() or None,
-                "engraver": request.form.get(f"engraver_{i}", "").strip(),
-                "status": request.form.get(f"status_{i}", "").strip(),
-                "place": request.form.get(f"place_{i}", "").strip(),
-                "capacity": request.form.get(f"capacity_{i}", "").strip(),
-                "os": request.form.get(f"os_{i}", "").strip(),
-                "serial_number": request.form.get(f"serial_number_{i}", "").strip(),
-                "imei_1": request.form.get(f"imei_1_{i}", "").strip(),
-                "imei_2": request.form.get(f"imei_2_{i}", "").strip(),
-                "donor_type": request.form.get(f"donor_type_{i}", "").strip(),
-                "entry_date": request.form.get(f"entry_date_{i}", "").strip(),
-                "donor": request.form.get(f"donor_{i}", "").strip(),
-            })
-        try:
-            for r in rows_data:
-                required = ["device_type", "brand", "model", "connection", "status",
-                            "place", "capacity", "donor_type", "entry_date"]
-                if any(not r[k] for k in required):
-                    raise ValueError(f"Internal number {r['internal']}: all required fields must be filled.")
-                capacity = int(r["capacity"])
-                if capacity < 0:
-                    raise ValueError("Capacity cannot be negative.")
 
-                dt = get_or_create(conn, "device_types", r["device_type"])
-                brand = get_or_create_brand(conn, r["brand"])
-                model = get_or_create_model(conn, brand, r["model"])
-                connection = get_or_create(conn, "connections", r["connection"])
-                status = get_or_create(conn, "statuses", r["status"])
-                donor_type = get_or_create(conn, "donor_types", r["donor_type"])
-                engraver = get_or_create(conn, "engravers", r["engraver"])
-                donor = get_or_create(conn, "donors", r["donor"])
+            rows_data.append({
+                # common fields
+                "device_type": common_device_type,
+                "brand": common_brand,
+                "model": common_model,
+                "connection": common_connection,
+                "donor_type": common_donor_type,
+                "entry_date": common_entry_date,
+                "donor": common_donor,
+                "place": common_place,
+
+                # individual fields
+                "internal": internal,
+
+                "status": request.form.get(
+                    f"status_{i}", ""
+                ).strip(),
+
+                "capacity": request.form.get(
+                    f"capacity_{i}", ""
+                ).strip(),
+
+                "os": request.form.get(
+                    f"os_{i}", ""
+                ).strip(),
+
+                "serial_number": request.form.get(
+                    f"serial_number_{i}", ""
+                ).strip(),
+
+                "imei_1": request.form.get(
+                    f"imei_1_{i}", ""
+                ).strip(),
+
+                "imei_2": request.form.get(
+                    f"imei_2_{i}", ""
+                ).strip(),
+            })
+
+        try:
+
+            for r in rows_data:
+
+                required = [
+                    "device_type",
+                    "brand",
+                    "model",
+                    "connection",
+                    "status",
+                    "donor_type",
+                    "donor",
+                    "entry_date"
+
+                ]
+
+                if any(not r[k] for k in required):
+                    raise ValueError(
+                        f"Internal number {r['internal']}: "
+                        "all required fields must be filled."
+                    )
+
+                capacity = int(r["capacity"])
+
+                if capacity < 0:
+                    raise ValueError(
+                        "Capacity cannot be negative."
+                    )
+
+                # lookup tables
+                dt = get_or_create(
+                    conn,
+                    "device_types",
+                    r["device_type"]
+                )
+
+                brand = get_or_create_brand(
+                    conn,
+                    r["brand"]
+                )
+
+                model = get_or_create_model(
+                    conn,
+                    brand,
+                    r["model"]
+                )
+
+                connection = get_or_create(
+                    conn,
+                    "connections",
+                    r["connection"]
+                )
+
+                status = get_or_create(
+                    conn,
+                    "statuses",
+                    r["status"]
+                )
+
+                donor_type = get_or_create(
+                    conn,
+                    "donor_types",
+                    r["donor_type"]
+                )
+
+                donor = get_or_create(
+                    conn,
+                    "donors",
+                    r["donor"]
+                )
 
                 conn.execute(
                     """INSERT INTO devices(
-                    internal_barcode,device_type_id,brand_id,model_id,connection_id,
-                    is_engraved,engraving_date,engraver_id,is_distributed,
-                    status_id,place_id,capacity_gb,os,serial_number,imei_1,imei_2,
-                    donor_type_id,entry_date,donor_id)
-                    VALUES (?,?,?,?,?,?,?,?,0,?,?,?,?,?,?,?,?,?,?)""",
-                    (r["internal"], dt, brand, model, connection, r["is_engraved"],
-                     r["engraving_date"], engraver, status, r["place"], capacity, r["os"],
-                     r["serial_number"], r["imei_1"], r["imei_2"], donor_type,
-                     r["entry_date"], donor)
+                        internal_barcode,
+                        device_type_id,
+                        brand_id,
+                        model_id,
+                        connection_id,
+                        is_engraved,
+                        engraving_date,
+                        engraver_id,
+                        is_distributed,
+                        status_id,
+                        place,
+                        capacity_gb,
+                        os,
+                        serial_number,
+                        imei_1,
+                        imei_2,
+                        donor_type_id,
+                        entry_date,
+                        donor_id
+                    )
+                    VALUES (
+                        ?, ?, ?, ?, ?,
+                        0, NULL, NULL,
+                        0,
+                        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    )""",
+                    (
+                        r["internal"],
+                        dt,
+                        brand,
+                        model,
+                        connection,
+                        # is_engraved = 0,
+                        # engraving_date = NULL,
+                        # engraver_id = NULL,
+                        # is_distributed = 0,
+                        status,
+                        r["place"],
+                        capacity,
+                        r["os"],
+                        r["serial_number"],
+                        r["imei_1"],
+                        r["imei_2"],
+                        donor_type,
+                        r["entry_date"],
+                        donor
+                    )
                 )
+
             conn.commit()
-            flash(f"{len(rows_data)} device(s) added successfully.", "success")
-            return redirect(url_for("main.devices"))
+
+            flash(
+                f"{len(rows_data)} device(s) added successfully.",
+                "success"
+            )
+
+            return redirect(
+                url_for("main.devices")
+            )
+
         except (sqlite3.IntegrityError, ValueError) as exc:
+
             conn.rollback()
-            flash(str(exc), "danger")
+
+            flash(
+                str(exc),
+                "danger"
+            )
+
+    # -------------------------------------------------------------
+    # Lists used by the Add Device page
+    # -------------------------------------------------------------
     lists = {
-        "device_types": conn.execute("SELECT name FROM device_types ORDER BY name").fetchall(),
-        "connections": conn.execute("SELECT name FROM connections ORDER BY name").fetchall(),
-        "statuses": conn.execute("SELECT name FROM statuses ORDER BY name").fetchall(),
-        "donor_types": conn.execute("SELECT name FROM donor_types ORDER BY name").fetchall(),
-        "engravers": conn.execute("SELECT name FROM engravers ORDER BY name").fetchall(),
-        "donors": conn.execute("SELECT name FROM donors ORDER BY name").fetchall(),
+        "device_types": conn.execute(
+            "SELECT name FROM device_types ORDER BY name"
+        ).fetchall(),
+
+        "connections": conn.execute(
+            "SELECT name FROM connections ORDER BY name"
+        ).fetchall(),
+
+        "statuses": conn.execute(
+            "SELECT name FROM statuses ORDER BY name"
+        ).fetchall(),
+
+        "donor_types": conn.execute(
+            "SELECT name FROM donor_types ORDER BY name"
+        ).fetchall(),
+
+        "donors": conn.execute(
+            "SELECT name FROM donors ORDER BY name"
+        ).fetchall(),
     }
+
     conn.close()
-    return render_template("add_devices.html", lists=lists, today=date.today().isoformat())
+
+    return render_template(
+        "add_devices.html",
+        lists=lists,
+        today=date.today().isoformat()
+    )
 
 @bp.route("/accessoires", methods=["GET", "POST"])
 def accessories():

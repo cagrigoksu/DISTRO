@@ -1,38 +1,86 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Device & Accessoires Inventory</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-body{background:#f5f7fa}.sidebar{min-height:100vh;background:#172033}.sidebar a{color:#dbe4f0;text-decoration:none;display:block;padding:10px 16px}.sidebar a:hover{background:#25314a;color:#fff}.brand{color:#fff;font-weight:700;padding:18px 16px;border-bottom:1px solid #344056}.content{padding:24px}.table-wrap{overflow:auto;max-height:70vh}.sticky-top{z-index:2}.small-muted{font-size:.85rem;color:#6c757d}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DISTRO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f5f7fa
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: #172033
+        }
+
+        .sidebar a {
+            color: #dbe4f0;
+            text-decoration: none;
+            display: block;
+            padding: 10px 16px
+        }
+
+        .sidebar a:hover {
+            background: #25314a;
+            color: #fff
+        }
+
+        .brand {
+            color: #fff;
+            font-weight: 700;
+            padding: 18px 16px;
+            border-bottom: 1px solid #344056
+        }
+
+        .content {
+            padding: 24px
+        }
+
+        .table-wrap {
+            overflow: auto;
+            max-height: 70vh
+        }
+
+        .sticky-top {
+            z-index: 2
+        }
+
+        .small-muted {
+            font-size: .85rem;
+            color: #6c757d
+        }
+    </style>
 </head>
+
 <body>
-<div class="container-fluid">
-<div class="row">
-<nav class="col-md-2 col-lg-2 sidebar p-0">
-<div class="brand">Device Inventory</div>
-<a href="{{ url_for('main.dashboard') }}">Dashboard</a>
-<a href="{{ url_for('main.devices') }}">Devices</a>
-<a href="{{ url_for('main.add_devices') }}">Add Devices</a>
-<a href="{{ url_for('main.accessories') }}">Accessoires</a>
-<a href="{{ url_for('main.pre_distribution') }}">Pre-Distribution</a>
-<a href="{{ url_for('main.post_distribution') }}">Post-Distribution</a>
-<a href="{{ url_for('main.inventory_download') }}">Download Inventory Excel</a>
-</nav>
-<main class="col-md-10 col-lg-10 content">
-{% with messages=get_flashed_messages(with_categories=true) %}
-{% for category, message in messages %}
-<div class="alert alert-{{ category }} alert-dismissible fade show">{{ message }}<button class="btn-close" data-bs-dismiss="alert"></button></div>
-{% endfor %}
-{% endwith %}
-{% block content %}{% endblock %}
-</main>
-</div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-{% block scripts %}{% endblock %}
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 col-lg-2 sidebar p-0">
+                <div class="brand">DISTRO</div>
+                <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('main.devices') }}">Devices</a>
+                <a href="{{ url_for('main.add_devices') }}">Add Devices</a>
+                <a href="{{ url_for('main.accessories') }}">Accessoires</a>
+                <a href="{{ url_for('main.pre_distribution') }}">Pre-Distribution</a>
+                <a href="{{ url_for('main.post_distribution') }}">Post-Distribution</a>
+                <a href="{{ url_for('main.inventory_download') }}">Download Inventory Excel</a>
+            </nav>
+            <main class="col-md-10 col-lg-10 content">
+                {% with messages=get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">{{ message }}<button
+                        class="btn-close" data-bs-dismiss="alert"></button></div>
+                {% endfor %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
 </body>
+
 </html>

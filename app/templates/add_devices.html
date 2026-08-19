@@ -1,46 +1,287 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Add Devices</h2>
-<p class="small-muted">You can add one or multiple devices in one submission. Fields marked * are required.</p>
+<p class="small-muted">
+    Define the common information once, then enter the individual information for each device.
+    Fields marked * are required.
+</p>
+
 <form method="post" id="deviceForm">
-<input type="hidden" name="row_count" id="row_count" value="1">
-<div id="rows"></div>
-<div class="mt-3"><button type="button" class="btn btn-outline-secondary" onclick="addRow()">+ Add another device</button>
-<button class="btn btn-primary">Save devices</button></div>
+
+    <!-- common info -->
+    <div class="card card-body mb-4">
+        <h5 class="mb-3">Common Device Information</h5>
+
+        <div class="row g-3">
+
+            <div class="col-md-2">
+                <label>Internal No (IN) Prefix *</label>
+                <input
+                    name="common_IN_prefix"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>Device type *</label>
+                <select name="common_device_type" class="form-select" required>
+                    {% for x in lists.device_types %}
+                    <option value="{{ x.name }}">{{ x.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label>Brand *</label>
+                <input
+                    name="common_brand"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>Model *</label>
+                <input
+                    name="common_model"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>Connection *</label>
+                <select name="common_connection" class="form-select" required>
+                    {% for x in lists.connections %}
+                    <option value="{{ x.name }}">{{ x.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label>Donor type *</label>
+                <select name="common_donor_type" class="form-select" required>
+                    {% for x in lists.donor_types %}
+                    <option value="{{ x.name }}">{{ x.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label>Entry date *</label>
+                <input
+                    type="date"
+                    name="common_entry_date"
+                    value="{{ today }}"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="col-md-4">
+                <label>Donor *</label>
+                <input
+                    name="common_donor"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="col-md-4">
+                <label>Place</label>
+                <input
+                    name="place"
+                    class="form-control"
+                >
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- individual devices -->
+    <input type="hidden" name="row_count" id="row_count" value="1">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Devices</h5>
+
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            onclick="addRow()"
+        >
+            + Add another device
+        </button>
+    </div>
+
+    <div id="rows"></div>
+
+    <div class="mt-3">
+        <button class="btn btn-primary">
+            Save devices
+        </button>
+    </div>
+
 </form>
+
+
+<!-- device row template -->
 <template id="rowTemplate">
-<div class="card card-body mb-3 device-row">
-<div class="d-flex justify-content-between"><h5>Device <span class="row-no"></span></h5><button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.device-row').remove()">Remove</button></div>
-<div class="row g-2">
-<div class="col-md-2"><label>Internal barcode *</label><input name="internal_barcode_INDEX" class="form-control" required></div>
-<div class="col-md-2"><label>Device type *</label><select name="device_type_INDEX" class="form-select" required>{% for x in lists.device_types %}<option>{{x.name}}</option>{% endfor %}</select></div>
-<div class="col-md-2"><label>Brand *</label><input name="brand_INDEX" class="form-control" required></div>
-<div class="col-md-2"><label>Model *</label><input name="model_INDEX" class="form-control" required></div>
-<div class="col-md-2"><label>Connection *</label><select name="connection_INDEX" class="form-select" required>{% for x in lists.connections %}<option>{{x.name}}</option>{% endfor %}</select></div>
-<div class="col-md-2"><label>Status *</label><select name="status_INDEX" class="form-select" required>{% for x in lists.statuses %}<option>{{x.name}}</option>{% endfor %}</select></div>
-<div class="col-md-2"><label>Place</label><input name="place_INDEX" class="form-control"></div>
-<div class="col-md-2"><label>Capacity GB *</label><input type="number" min="0" name="capacity_INDEX" class="form-control" required></div>
-<div class="col-md-2"><label>OS</label><input name="os_INDEX" class="form-control"></div>
-<div class="col-md-2"><label>Serial number</label><input name="serial_number_INDEX" class="form-control"></div>
-<div class="col-md-2"><label>IMEI-1</label><input name="imei_1_INDEX" class="form-control"></div>
-<div class="col-md-2"><label>IMEI-2</label><input name="imei_2_INDEX" class="form-control"></div>
-<div class="col-md-2"><label>Donor type *</label><select name="donor_type_INDEX" class="form-select" required>{% for x in lists.donor_types %}<option>{{x.name}}</option>{% endfor %}</select></div>
-<div class="col-md-2"><label>Entry date *</label><input type="date" name="entry_date_INDEX" value="{{today}}" class="form-control" required></div>
-<div class="col-md-3"><label>Donor</label><input name="donor_INDEX" class="form-control"></div>
-</div></div>
+
+    <div class="card card-body mb-3 device-row">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">
+                Device <span class="row-no"></span>
+            </h5>
+
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                onclick="removeRow(this)"
+            >
+                Remove
+            </button>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-2">
+                <label>IN Prefix + Internal No *</label>
+                <input
+                    name="internal_barcode_INDEX"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>Status *</label>
+                <select
+                    name="status_INDEX"
+                    class="form-select"
+                    required
+                >
+                    {% for x in lists.statuses %}
+                    <option value="{{ x.name }}">{{ x.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label>Capacity GB</label>
+                <input
+                    type="number"
+                    min="0"
+                    value="0"
+                    name="capacity_INDEX"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>OS</label>
+                <input
+                    name="os_INDEX"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>Serial number</label>
+                <input
+                    name="serial_number_INDEX"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>IMEI-1</label>
+                <input
+                    name="imei_1_INDEX"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="col-md-2">
+                <label>IMEI-2</label>
+                <input
+                    name="imei_2_INDEX"
+                    class="form-control"
+                >
+            </div>
+
+        </div>
+
+    </div>
+
 </template>
+
 {% endblock %}
+
+
 {% block scripts %}
+
 <script>
-let n=0;
-function addRow(){
- n++;
- const html=document.getElementById('rowTemplate').innerHTML.replaceAll('INDEX',n);
- const wrap=document.createElement('div'); wrap.innerHTML=html;
- wrap.querySelector('.row-no').textContent=n;
- document.getElementById('rows').appendChild(wrap.firstElementChild);
- document.getElementById('row_count').value=n;
+
+let n = 0;
+
+
+function addRow() {
+
+    n++;
+
+    const html =
+        document
+            .getElementById('rowTemplate')
+            .innerHTML
+            .replaceAll('INDEX', n);
+
+    const wrap = document.createElement('div');
+
+    wrap.innerHTML = html;
+
+    const row = wrap.firstElementChild;
+
+    row.querySelector('.row-no').textContent = n;
+
+    document
+        .getElementById('rows')
+        .appendChild(row);
+
+    document
+        .getElementById('row_count')
+        .value = n;
 }
+
+
+function removeRow(button) {
+
+    const row = button.closest('.device-row');
+
+    row.remove();
+
+    updateRowNumbers();
+}
+
+
+function updateRowNumbers() {
+
+    const rows =
+        document.querySelectorAll('.device-row');
+
+    rows.forEach((row, index) => {
+
+        row.querySelector('.row-no').textContent =
+            index + 1;
+
+    });
+}
+
+
 addRow();
+
 </script>
+
 {% endblock %}
